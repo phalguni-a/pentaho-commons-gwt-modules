@@ -81,7 +81,7 @@ label {
 }
 
 legend{
-  color: #777;
+  color: #666;
 }
 
 fieldset, fieldset.xul-fieldset {
@@ -640,7 +640,7 @@ div#data-controlproperties-spacer {
 
 .pentaho-dialog .dialogMiddleCenterInner {
   height: 100%;
-  color: #777;
+  color: #707070;
 }
 
 .pentaho-dialog .dialogMiddleLeft {
@@ -3066,7 +3066,7 @@ background: transparent;
   border: 0px solid #666;
 }
 .gwt-ScrollTable .headerTable td{
-  color: #FFFFFF;
+  color: #2D4149;
   border-right: 1px solid rgb(255, 255, 255);
   background: #8ab3c6;
 }
@@ -3153,7 +3153,7 @@ background: transparent;
   padding-left: 5px;
   padding-right: 5px;
   font-size: 14px;
-  color: #fff;
+  color: #2D4149;
   cursor: default;
 }
 
@@ -4171,7 +4171,7 @@ vertical-align: middle;
   background-position: 0px 2px;
 }
 
-.pentaho-filechooseupbutton {
+.pentaho-filechooseupimage {
   background-image: url("images/up.png");
   width: 22px;
   height: 22px;
@@ -5690,4 +5690,8 @@ for the rebranding on the Ruby theme cause a smaller impact on the other themes 
 
 .pentaho-page-background#pageLoading .page-loading-icon {
   margin-right: 10px;
+}
+
+.gwt-Label {
+  color: #666;
 }
