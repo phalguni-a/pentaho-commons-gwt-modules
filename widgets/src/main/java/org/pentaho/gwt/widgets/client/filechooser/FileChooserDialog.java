@@ -406,11 +406,6 @@ public class FileChooserDialog extends PromptDialogBox implements FileChooserLis
     // Use the popup's key preview hooks to close the dialog when either
     // enter or escape is pressed.
     switch ( key ) {
-      case KeyboardListener.KEY_ENTER:
-        if ( isSubmitOnEnter() ) {
-          onOk();
-        }
-        break;
       case KeyboardListener.KEY_ESCAPE:
         onCancel();
         break;

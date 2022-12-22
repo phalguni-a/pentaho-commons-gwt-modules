@@ -85,6 +85,8 @@ public class PentahoTab extends SimplePanel {
     label.setText( text );
     label.setTitle( tooltip );
     label.setStylePrimaryName( "pentaho-tabWidgetLabel" );
+    label.getElement().setTabIndex(0);
+    label.getElement().focus();
   }
 
   public Widget getContent() {

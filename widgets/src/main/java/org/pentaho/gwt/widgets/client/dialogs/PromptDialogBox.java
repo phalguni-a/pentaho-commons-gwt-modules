@@ -44,6 +44,8 @@ public class PromptDialogBox extends DialogBox {
     super( autoHide, modal );
     setText( title );
     okButton = new Button( okText );
+    okButton.setTabIndex(0);
+    okButton.setFocus(true);
     okButton.setStylePrimaryName( "pentaho-button" );
     okButton.getElement().setAttribute( "id", "okButton" ); //$NON-NLS-1$ //$NON-NLS-2$
     okButton.addClickListener( new ClickListener() {
@@ -70,6 +72,8 @@ public class PromptDialogBox extends DialogBox {
 
     if ( cancelText != null ) {
       cancelButton = new Button( cancelText );
+      cancelButton.setFocus(true);
+      cancelButton.setTabIndex(0);
       cancelButton.setStylePrimaryName( "pentaho-button" );
       cancelButton.getElement().setAttribute( "id", "cancelButton" ); //$NON-NLS-1$ //$NON-NLS-2$
       cancelButton.addClickListener( new ClickListener() {

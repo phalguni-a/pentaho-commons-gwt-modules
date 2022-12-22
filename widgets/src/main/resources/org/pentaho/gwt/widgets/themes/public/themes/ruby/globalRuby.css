@@ -899,7 +899,7 @@ For IE 9 and IE10, need to add padding to the bottom of some dialogs generated w
   background-clip: border-box; /*default*/
 }
 
-.pentaho-dialog #override-description {
+.pentaho-dialog .override-description {
   padding-bottom: 10px;
 }
 
@@ -908,8 +908,16 @@ For IE 9 and IE10, need to add padding to the bottom of some dialogs generated w
 }
 
 .pentaho-dialog#dialogOverrideFolder,
-.pentaho-dialog#dialogRename {
-  width: 495px;
+.pentaho-dialog#dialogOverrideFile
+.pentaho-dialog#dialogRename,
+.pentaho-dialog#rename-error-dialog{
+  left: 15%;
+  right: 15%;
+  top: 25%;
+  overflow: auto;
+  bottom: 10%;
+  height: 35%;
+  width: auto;
 }
 
 .pentaho-dialog#dialogOverrideFile {
@@ -1648,13 +1656,24 @@ input:focus {
   outline: none;
 }
 
-.toolbar-button.toolbar-button-hovering {
+/*.toolbar-button.toolbar-button-hovering {*/
+/*  border: 1px solid #CC0000;*/
+/*  background: none;*/
+/*  cursor: pointer;*/
+/*  margin: 0px;*/
+/*  width: 22px;*/
+/*  height: 22px;*/
+/*  -webkit-user-select: none;*/
+/*  outline: none;*/
+/*}*/
+
+.toolbar-button-focus:hover,.toolbar-button-focus:focus {
   border: 1px solid #CC0000;
   background: none;
   cursor: pointer;
   margin: 0px;
-  width: 22px;
-  height: 22px;
+  width: 29px;
+  height: 24px;
   -webkit-user-select: none;
   outline: none;
 }
@@ -4086,9 +4105,15 @@ div.dijitDateTextBox.dijitComboBox {
 }
 
 /* added by brett to override browser styles */
+/*TODO: The width needs to be made auto inorder to disable horizontal scroll bar and then the Files section and the Folder Actions section scrolls down on zooming int
+ */
 .main-container {
   margin: 0 auto;
   width: 1230px;
+}
+
+.main-container .fill-absolute {
+  width: auto;
 }
 
 /* Browse Files */
@@ -4127,6 +4152,14 @@ div.dijitDateTextBox.dijitComboBox {
   background-color: #E0E0E0;
 }
 
+.fileBrowserColumn .body .folder .element:focus-visible
+{
+  background-color: #E0E0E0;
+  outline: 2px solid crimson;
+  border-radius: 3px;
+}
+
+
 /*.fileBrowserColumn .body .folder .element:hover .icon {
   background: url(images/folder_closed_white.png) no-repeat !important;
 }
@@ -4153,6 +4186,12 @@ div.dijitDateTextBox.dijitComboBox {
   background-color: #E0E0E0;
 }
 
+.fileBrowserColumn .body .file.focused {
+  background-color: #E0E0E0;
+  outline: 2px solid crimson;
+  border-radius: 3px;
+}
+
 .fileBrowserColumn .body .folder.selected > .element {
   background: rgba(204, 0, 0, 0.2);
 }
@@ -4165,8 +4204,8 @@ div.dijitDateTextBox.dijitComboBox {
   background: rgba(204, 0, 0, 0.2);
 }
 
-#fileBrowserButtons {
-  width: 250px;
+#fileBrowserButtons,#fileBrowserFiles,#fileBrowserFolders {
+  width: 325px;
 }
 
 .fileChooser-scrollPanel > div > table > * {
@@ -5718,7 +5757,7 @@ span.gwt-RadioButton label {
   background-position: 0px 2px;
 }
 
-.pentaho-filechooseupbutton {
+.pentaho-filechooseupimage {
   background-image: url("images/up.png");
   width: 22px;
   height: 22px;
@@ -5726,6 +5765,18 @@ span.gwt-RadioButton label {
   padding: 4px;
   background-repeat: no-repeat;
   background-position: 2px 4px;
+}
+
+.pentaho-filechooseupimage:focus-visible {
+  background-image: url("images/up.png");
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  padding: 4px;
+  background-repeat: no-repeat;
+  background-position: 2px 4px;
+  outline: 2px solid crimson;
+  border-radius: 3px;
 }
 
 .IE #browse-properties-dialog {

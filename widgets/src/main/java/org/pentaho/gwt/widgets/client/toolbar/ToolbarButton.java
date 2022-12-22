@@ -17,22 +17,11 @@
 
 package org.pentaho.gwt.widgets.client.toolbar;
 
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.aria.client.PressedValue;
+import com.google.gwt.aria.client.Roles;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.DockPanel;
-import com.google.gwt.user.client.ui.FocusPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.MouseListener;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import org.pentaho.gwt.widgets.client.text.ToolTip;
 
 /**
@@ -138,8 +127,12 @@ public class ToolbarButton {
 
     button.setStyleName( stylePrimaryName );
     eventWrapper.add( button );
+    Roles.getButtonRole().set(eventWrapper.getElement());
+    Roles.getButtonRole().setAriaPressedState( eventWrapper.getElement(), PressedValue.FALSE );
+    eventWrapper.setStylePrimaryName("toolbar-button-focus");
 
     addStyleMouseListener();
+    addKeyboardListener();
   }
 
   public void setId( String id ) {
@@ -211,6 +204,25 @@ public class ToolbarButton {
       public void onMouseMove( Widget arg0, int arg1, int arg2 ) {
       }
     } );
+  }
+
+  protected void addKeyboardListener(){
+
+    eventWrapper.addKeyDownHandler(new KeyDownHandler() {
+      @Override
+      public void onKeyDown(KeyDownEvent keyDownEvent) {
+        if (keyDownEvent.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+          if (!enabled) {
+            // ElementUtils.blur(ToolbarButton.this.eventWrapper.getElement());
+            return;
+          }
+          Roles.getButtonRole().setAriaPressedState( eventWrapper.getElement(), PressedValue.TRUE );
+          command.execute();
+          Roles.getButtonRole().setAriaPressedState( eventWrapper.getElement(), PressedValue.FALSE );
+          // ElementUtils.blur(ToolbarButton.this.eventWrapper.getElement());
+        }
+      }
+    });
   }
 
   /**

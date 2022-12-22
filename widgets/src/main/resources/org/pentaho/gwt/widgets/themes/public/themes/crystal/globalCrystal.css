@@ -475,7 +475,7 @@ For IE 9 and IE10, need to add padding to the bottom of some dialogs generated w
   background-clip: border-box; /*default*/
 }
 
-.pentaho-dialog #override-description {
+.pentaho-dialog .override-description {
   padding-bottom: 10px;
 }
 

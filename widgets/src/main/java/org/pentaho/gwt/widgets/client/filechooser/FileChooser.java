@@ -16,12 +16,10 @@
  */
 package org.pentaho.gwt.widgets.client.filechooser;
 
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -31,21 +29,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.MouseListener;
-import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Tree;
-import com.google.gwt.user.client.ui.TreeItem;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import org.pentaho.gwt.widgets.client.dialogs.IDialogCallback;
 import org.pentaho.gwt.widgets.client.utils.ElementUtils;
 import org.pentaho.gwt.widgets.client.utils.NameUtils;
@@ -97,6 +81,9 @@ public class FileChooser extends VerticalPanel {
     super();
 
     fileNameTextBox.getElement().setId( "fileNameTextBox" );
+    Roles.getTextboxRole().setTabindexExtraAttribute(fileNameTextBox.getElement(),0);
+    Roles.getTextboxRole().setAriaLabelProperty(fileNameTextBox.getElement(),FileChooserEntryPoint.messages.getString( "filename" ) );
+    fileNameTextBox.setFocus(true);
 
     // workaround webkit browsers quirk of not being able to set focus in a widget by clicking on it
     fileNameTextBox.addClickHandler( new ClickHandler() {
@@ -361,6 +348,9 @@ public class FileChooser extends VerticalPanel {
     navigationListBox = new ListBox();
     navigationListBox.getElement().setId( "navigationListBox" );
     navigationListBox.setWidth( "350px" );
+    Roles.getListboxRole().setTabindexExtraAttribute(navigationListBox.getElement(),0);
+    Roles.getListboxRole().setAriaLabelProperty(navigationListBox.getElement(),FileChooserEntryPoint.messages.getString( "location" ));
+    navigationListBox.setFocus(true);
     // now we can find the tree nodes who match the path segments
     navigationListBox.addItem( "/", "/" );
     // Actual and Localized Path segments will be the same size based on how items get added to their lists.
@@ -395,12 +385,17 @@ public class FileChooser extends VerticalPanel {
 
     HorizontalPanel navigationBar = new HorizontalPanel();
 
-    final Image upDirImage = new Image();
-    upDirImage.setUrl( GWT.getModuleBaseURL() + "images/spacer.gif" );
-    upDirImage.addStyleName( "pentaho-filechooseupbutton" );
+
+    final Image upDirImage = new Image(GWT.getModuleBaseURL() + "images/spacer.gif");
+    upDirImage.addStyleName( "pentaho-filechooseupimage" );
     upDirImage.setTitle( FileChooserEntryPoint.messages.getString( "upOneLevel" ) );
 
-    upDirImage.addMouseListener( new MouseListener() {
+    final Button upDirButton = new Button();
+    upDirButton.getElement().appendChild(upDirImage.getElement());
+    Roles.getButtonRole().setTabindexExtraAttribute(upDirButton.getElement(),0);
+    upDirButton.setFocus(true);
+
+    upDirButton.addMouseListener( new MouseListener() {
 
       public void onMouseDown( Widget sender, int x, int y ) {
       }
@@ -419,7 +414,7 @@ public class FileChooser extends VerticalPanel {
 
     } );
 
-    upDirImage.addClickListener( new ClickListener() {
+    upDirButton.addClickListener( new ClickListener() {
       public void onClick( Widget sender ) {
         // go up a dir
         TreeItem tmpItem = selectedTreeItem;
@@ -459,9 +454,9 @@ public class FileChooser extends VerticalPanel {
     navigationBar.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_LEFT );
     navigationBar.add( navigationListBox );
     navigationBar.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_LEFT );
-    navigationBar.add( upDirImage );
-    navigationBar.setCellWidth( upDirImage, "100%" );
-    DOM.setStyleAttribute( upDirImage.getElement(), "marginLeft", "4px" );
+    navigationBar.add( upDirButton );
+    navigationBar.setCellWidth( upDirButton, "100%" );
+    DOM.setStyleAttribute( upDirButton.getElement(), "marginLeft", "4px" );
     navigationBar.setWidth( "100%" );
 
     locationBar.add( navigationBar );
@@ -483,6 +478,8 @@ public class FileChooser extends VerticalPanel {
     ScrollPanel filesScroller = new ScrollPanel();
 
     filesScroller.setStyleName( "fileChooser-scrollPanel" );
+    Roles.getDirectoryRole().set(filesScroller.getElement());
+    Roles.getDirectoryRole().setAriaLabelProperty( filesScroller.getElement(), "FileChooser");
 
     FlexTable filesListTable = new FlexTable();
     filesListTable.setWidth( "100%" );
@@ -561,6 +558,8 @@ public class FileChooser extends VerticalPanel {
         switch ( event.getTypeInt() ) {
           case Event.ONCLICK:
           case Event.ONDBLCLICK:
+          case Event.ONKEYDOWN:
+          case Event.ONFOCUS:
             handleFileClicked( item, isDir, event, this.getElement() );
             break;
           case Event.ONMOUSEOVER:
@@ -575,10 +574,12 @@ public class FileChooser extends VerticalPanel {
 
     // biserver-2719: concatenate the name with fileChooser_ so the ids are unique in Mantle
     myNameLabel.getElement().setAttribute( "id", "fileChooser_".concat( file.getId() ) );
-    myNameLabel.sinkEvents( Event.ONDBLCLICK | Event.ONCLICK );
+    myNameLabel.sinkEvents( Event.ONDBLCLICK | Event.ONCLICK | Event.ONKEYDOWN);
     myNameLabel.sinkEvents( Event.ONMOUSEOVER | Event.ONMOUSEOUT );
     myNameLabel.setTitle( file.getTitle() );
     myNameLabel.setStyleName( "fileChooserCellLabel" );
+    myNameLabel.getElement().setTabIndex(0);
+    myNameLabel.getElement().focus();
 
     HorizontalPanel fileNamePanel = new HorizontalPanel();
     Image fileImage = new Image() {
@@ -657,7 +658,8 @@ public class FileChooser extends VerticalPanel {
     boolean eventWeCareAbout = false;
     TreeItem tmpItem;
     if ( ( DOM.eventGetType( event ) & Event.ONDBLCLICK ) == Event.ONDBLCLICK
-      || ( DOM.eventGetType( event ) & Event.ONCLICK ) == Event.ONCLICK ) {
+      || ( DOM.eventGetType( event ) & Event.ONCLICK ) == Event.ONCLICK
+    || event.getKeyCode() == KeyCodes.KEY_ENTER) {
       eventWeCareAbout = true;
     }
 
@@ -693,7 +695,8 @@ public class FileChooser extends VerticalPanel {
     }
 
     // double click
-    if ( ( DOM.eventGetType( event ) & Event.ONDBLCLICK ) == Event.ONDBLCLICK ) {
+    if ( ( DOM.eventGetType( event ) & Event.ONDBLCLICK ) == Event.ONDBLCLICK
+    || event.getKeyCode() == KeyCodes.KEY_ENTER) {
       if ( isDir ) {
         if ( !isLazy ) {
           initUI();
